@@ -9,7 +9,7 @@ const typeDefs = gql`
     by: String
     createdDate: String!
     updatedDate: String
-    category: String!
+    category: Category!
     type: String!
   }
 
@@ -20,17 +20,17 @@ const typeDefs = gql`
     by: String
     updatedDate: String
     createdDate: String!
-    category: String!
+    category: ID!
     type: String!
   }
 
-  input MediaIntputUpdate {
+  input MediaInputUpdate {
     title: String
     imgUrl: String
     description: String
     photographeName: String
-    category: String
     updatedDate: String
+    category: ID
   }
 
   type User {
@@ -46,7 +46,7 @@ const typeDefs = gql`
   }
 
   input SigninUserInput {
-    email: String!
+    username: String!
     password: String!
   }
 
@@ -81,21 +81,36 @@ const typeDefs = gql`
     email: String
   }
 
+  type Category {
+    _id: ID!
+    name: String!
+    medias: [Media]
+  }
+
+  input CategoryInput {
+    name: String
+  }
+
   type Query {
     medias: [Media]
     media(_id: ID!): Media
     userInfo: UserInfo
     me: User
+    categories: [Category]
+    category(_id: ID!): Category
   }
 
   type Mutation {
     addMedia(data: MediaIntput): Media
-    updateMedia(_id: ID!, data: MediaIntputUpdate): Media
+    updateMedia(_id: ID!, data: MediaInputUpdate): Media
     deleteMedia(_id: ID!): Media
     addUserInfo(data: UserInfoInput): UserInfo
     updateUserInfo(_id: ID!, data: UserInfoInputUpdate): UserInfo
     signupUser(data: SignupUserInput): Token
     signinUser(data: SigninUserInput): Token
+    addCategory(data: CategoryInput): Category
+    updateCategory(_id: ID!, data: CategoryInput): Category
+    deleteCategory(_id: ID!): Category
   }
 `;
 

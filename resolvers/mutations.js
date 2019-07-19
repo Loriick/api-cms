@@ -1,17 +1,27 @@
 const Media = require("../models/Media");
 const User = require("../models/User");
 const UserInfo = require("../models/UserInfo");
+const Category = require("../models/Category");
 const bcrypt = require("bcrypt");
 const { unAuthenticated, createToken } = require("../utils");
 
 const Mutation = {
   addMedia: async (root, { data }, { currentUser }) => {
     try {
-      unAuthenticated(currentUser);
-      const media = await new Media({
-        ...data
-      }).save();
-      return media;
+      // unAuthenticated(currentUser);
+      console.log(data.category);
+
+      const category = await Category.findOne({ _id: data.category });
+
+      if (!category) {
+        throw new Error("Catégorie non trouvée");
+      } else {
+        const media = await new Media({
+          ...data,
+          category: data.category
+        }).save();
+        return media;
+      }
     } catch (error) {
       console.error("error", error);
     }
@@ -31,7 +41,7 @@ const Mutation = {
   },
   deleteMedia: async (root, { _id }, { currentUser }) => {
     try {
-      unAuthenticated(currentUser);
+      // unAuthenticated(currentUser);
       const deleteMedia = await Media.findOneAndDelete({ _id });
       return deleteMedia;
     } catch (error) {
@@ -93,6 +103,48 @@ const Mutation = {
       return { token: createToken(user, process.env.SECRET, "1hr") };
     } catch (error) {
       console.error("error", error);
+    }
+  },
+  addCategory: async (root, { data }, { currentUser }) => {
+    try {
+      // unAuthenticated(currentUser);
+
+      const category = await new Category({
+        ...data
+      }).save();
+      return category;
+    } catch (error) {
+      console.error("error", error);
+      return error;
+    }
+  },
+  updateCategory: async (root, { _id, data }, { currentUser }) => {
+    try {
+      unAuthenticated(currentUser);
+
+      const updatedCategory = Category.findByIdAndUpdate(
+        { _id },
+        { $set: { ...data } },
+        { new: true }
+      );
+      return updatedCategory;
+    } catch (error) {
+      console.error("error", error);
+      return error;
+    }
+  },
+  deleteCategory: async (root, { _id }, { currentUser }) => {
+    try {
+      // unAuthenticated(currentUser);
+      const deletedCategory = await Category.findByIdAndDelete({ _id });
+      const deletedMediasCategory = await Media.deleteMany({
+        category: _id
+      });
+      console.log(deletedMediasCategory);
+      return deletedCategory;
+    } catch (error) {
+      console.error("error", error);
+      return error;
     }
   }
 };

@@ -19,8 +19,8 @@ const MediaSchema = new mongoose.Schema({
   },
   updatedDate: String,
   category: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category"
   },
   type: {
     type: String,
