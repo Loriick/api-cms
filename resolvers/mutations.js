@@ -9,10 +9,8 @@ const Mutation = {
   addMedia: async (root, { data }, { currentUser }) => {
     try {
       // unAuthenticated(currentUser);
-      console.log(data.category);
 
       const category = await Category.findOne({ _id: data.category });
-
       if (!category) {
         throw new Error("Catégorie non trouvée");
       } else {
@@ -73,7 +71,9 @@ const Mutation = {
     }
   },
   signupUser: async (root, { data: { username, email, password } }, ctx) => {
+    console.log("1", username, email, password);
     try {
+      console.log("2gity ", username, email, password);
       const user = await User.findOne({ username });
       if (user) {
         throw new Error("User already exists");
@@ -137,10 +137,7 @@ const Mutation = {
     try {
       // unAuthenticated(currentUser);
       const deletedCategory = await Category.findByIdAndDelete({ _id });
-      const deletedMediasCategory = await Media.deleteMany({
-        category: _id
-      });
-      console.log(deletedMediasCategory);
+      await Media.deleteMany({ category: _id });
       return deletedCategory;
     } catch (error) {
       console.error("error", error);

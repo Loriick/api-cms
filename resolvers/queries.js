@@ -33,9 +33,8 @@ const Query = {
   me: async (root, args, { currentUser }) => {
     if (!currentUser) return null;
     const user = await User.findOne({
-      email: currentUser.username
+      username: currentUser.username
     });
-    console.log(currentUser.username);
     return user;
   },
   categories: async (root, args, ctx) => {
