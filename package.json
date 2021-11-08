@@ -4,7 +4,7 @@
   "main": "server.js",
   "license": "MIT",
   "dependencies": {
-    "apollo-server": "^2.7.0-alpha.3",
+    "apollo-server": "^2.25.3",
     "bcrypt": "^3.0.6",
     "cloudinary": "^1.14.0",
     "dotenv": "^8.0.0",
